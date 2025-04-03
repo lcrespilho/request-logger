@@ -3,6 +3,7 @@
 A simple HTTP request logging service that captures and displays incoming HTTP requests in real-time. Perfect for debugging webhooks, HTTP clients, and API integrations.
 
 ## Features
+
 - Logs all incoming HTTP requests
 - Real-time updates via WebSocket
 - Web interface to view logged requests
@@ -11,6 +12,7 @@ A simple HTTP request logging service that captures and displays incoming HTTP r
 - Request body and headers capture
 
 ## Installation
+
 ```bash
 # Clone the repository
 git clone [repo-url]
@@ -23,18 +25,21 @@ npm start
 ```
 
 ## Usage
+
 The server runs on port 1029 by default. You can change this by setting the PORT environment variable.
 
 ### Endpoints
 
 #### Request Logging
-__http://localhost:1029/collect/*__ : Any HTTP method will be logged
+
+**http://localhost:1029/collect/\*** : Any HTTP method will be logged
 
 #### Web Interface
-__http://localhost:1029/logs__ : Main web interface to view logged requests
 
+**http://localhost:1029/logs** : Main web interface to view logged requests
 
 ## NGINX domain-mapping with proxy_pass
+
 Use this server block map this service on your own domain, under the /request-logger path:
 
 ```nginx
@@ -53,10 +58,20 @@ location /request-logger/ {
 }
 ```
 
-### Own domain Endpoints
+### Domain-mapped endpoints
 
 #### Request Logging
-__https://your-domain.com/request-logger/collect/*__ : Any HTTP method will be logged
+
+**https://your-domain.com/request-logger/collect/*** : Any HTTP method will be logged
 
 #### Web Interface
-__https://your-domain.com/request-logger/logs__ : Main web interface to view logged requests
+
+**https://your-domain.com/request-logger/logs** : Main web interface to view logged requests
+
+## Managing the process via PM2
+
+```bash
+cd request-logger
+pm2 start "npm start" --name request-logger
+pm2 save
+```
