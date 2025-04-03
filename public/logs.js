@@ -46,7 +46,7 @@ function renderLogs() {
 function connectSSE() {
   logStatus.textContent = 'Conectando ao servidor de eventos...'
   console.log('Connecting to SSE endpoint')
-  const eventSource = new EventSource('/sse') // Conecta ao endpoint SSE
+  const eventSource = new EventSource('sse') // Conecta ao endpoint SSE
 
   eventSource.onopen = () => {
     logStatus.textContent = 'Conectado. Aguardando logs...'
