@@ -46,8 +46,9 @@ app.get('/logs', (req, res) => {
 app.get('/sse', (req, res) => {
   // Headers essenciais para SSE
   res.setHeader('Content-Type', 'text/event-stream')
-  res.setHeader('Cache-Control', 'no-cache')
+  res.setHeader('Cache-Control', 'no-cache, no-transform')
   res.setHeader('Connection', 'keep-alive')
+  res.setHeader('X-Accel-Buffering', 'no') // Important for nginx
   res.flushHeaders() // Envia os headers imediatamente
 
   const clientId = Date.now()
