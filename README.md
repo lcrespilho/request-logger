@@ -38,8 +38,8 @@ __http://localhost:1029/logs__ : Main web interface to view logged requests
 Use this server block map this service on your own domain, under the /request-logger path:
 
 ```nginx
-location /request-logger {
-  proxy_pass http://127.0.0.1:1029;
+location /request-logger/ {
+  proxy_pass http://127.0.0.1:1029/;
   proxy_set_header Host $http_host;
   proxy_set_header X-Real-IP $remote_addr;
   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
