@@ -3,16 +3,16 @@ const http = require('http') // Necessário para SSE
 const path = require('path')
 
 const app = express()
-const cors = require('cors')
+//const cors = require('cors')
 const server = http.createServer(app) // Usaremos este server para SSE
 const PORT = process.env.PORT || 1029 // Use a porta do ambiente ou 3000
 
 // Enable CORS for all routes
-app.use(
-  cors({
-    credentials: true,
-  })
-)
+//app.use(
+//  cors({
+//    credentials: true,
+//  })
+//)
 
 // ----- Armazenamento em Memória -----
 let loggedRequests = [] // Array para guardar os logs
