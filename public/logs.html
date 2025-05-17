@@ -5,63 +5,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Log de Requisições</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      line-height: 1.5;
-      margin: 20px;
-      background-color: #f9f9f9;
-    }
-
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-
-    #logContainer {
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      padding: 15px;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-
-    .log-entry {
-      border-bottom: 1px dashed #eee;
-      padding: 15px 0;
-    }
-
-    .log-entry:last-child {
-      border-bottom: none;
-    }
-
-    pre {
-      background-color: #eee;
-      padding: 10px;
-      border-radius: 4px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-size: 0.9em;
-    }
-
-    strong {
-      color: #555;
-    }
-
-    .status {
-      text-align: center;
-      padding: 10px;
-      font-style: italic;
-      color: #777;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <h1>Painel de Log de Requisições HTTP</h1>
   <div id="logStatus" class="status">Conectando ao servidor...</div>
-  <div id="logContainer">
+  <div id="logContainer"></div>
+
+  <div id="infoButton">?</div>
+  <div id="infoText">
+    <p>Este painel exibe logs de requisições HTTP em tempo real.</p>
+    <p>Envie requisições GET ou POST para https://louren.co.in/request-logger/collect/{some-path}[/?somequery]</p>
+    <pre>   // Exemplo 1: GET
+    fetch('https://louren.co.in/request-logger/collect/myrequest', {
+      method: 'GET'
+    })
+    </pre>
+    <pre>   // Exemplo 2: POST
+    fetch('https://louren.co.in/request-logger/collect/myrequest', {
+      mode: 'cors',
+      method: 'POST',
+      headers: { 'content-type': 'application/json' }, // obrigatório
+      body: JSON.stringify({ a: 'aa' }),
+    })
+    </pre>
   </div>
 
   <script src="logs.js"></script>

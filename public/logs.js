@@ -1,3 +1,9 @@
+const infoButton = document.getElementById('infoButton')
+const infoText = document.getElementById('infoText')
+infoButton.addEventListener('click', () => {
+  infoText.style.display = infoText.style.display === 'none' ? 'block' : 'none'
+})
+
 const logContainer = document.getElementById('logContainer')
 const logStatus = document.getElementById('logStatus')
 let clientLogs = [] // Armazena os logs no lado do cliente

@@ -32,11 +32,11 @@ The server runs on port 1029 by default. You can change this by setting the PORT
 
 #### Request Logging
 
-**http://localhost:1029/collect/\*** : Any HTTP method will be logged
+`http://localhost:1029/collect/*` : Any HTTP method will be logged
 
 #### Web Interface
 
-**http://localhost:1029/logs** : Main web interface to view logged requests
+`http://localhost:1029/logs` : Main web interface to view logged requests
 
 ## NGINX domain-mapping with proxy_pass
 
@@ -62,11 +62,11 @@ location /request-logger/ {
 
 #### Request Logging
 
-**https://your-domain.com/request-logger/collect/*** : Any HTTP method will be logged
+`https://your-domain.com/request-logger/collect/*` : Any HTTP method will be logged
 
 #### Web Interface
 
-**https://your-domain.com/request-logger/logs** : Main web interface to view logged requests
+`https://your-domain.com/request-logger/logs` : Main web interface to view logged requests
 
 ## Managing the process via PM2
 

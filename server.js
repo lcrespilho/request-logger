@@ -3,10 +3,11 @@ const http = require('http') // Necessário para SSE
 const path = require('path')
 
 const app = express()
-//const cors = require('cors')
 const server = http.createServer(app) // Usaremos este server para SSE
 const PORT = process.env.PORT || 1029 // Use a porta do ambiente ou 3000
 
+// CORS disabled because my nginx adds cors headers
+//const cors = require('cors')
 // Enable CORS for all routes
 //app.use(
 //  cors({
@@ -16,7 +17,7 @@ const PORT = process.env.PORT || 1029 // Use a porta do ambiente ou 3000
 
 // ----- Armazenamento em Memória -----
 let loggedRequests = [] // Array para guardar os logs
-const MAX_LOGS = 100 // Limite de logs
+const MAX_LOGS = 1000 // Limite de logs
 
 // ----- Middleware -----
 // Para parsear JSON no corpo das requisições POST
