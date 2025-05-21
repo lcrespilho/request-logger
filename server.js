@@ -69,9 +69,8 @@ app.get('/sse', (req, res) => {
   })
 })
 
-// ----- Rota de coleta -----
-// Captura TODAS as requisições (GET, POST, etc) para /collect/*
-app.all(/\/collect\/.+/, (req, res) => {
+// ----- Helper function for logging requests -----
+function handleLogRequest(req, res) {
   const logEntry = {
     timestamp: new Date().toISOString(),
     ip: req.ip || req.socket.remoteAddress, // IP do requisitante
@@ -97,6 +96,30 @@ app.all(/\/collect\/.+/, (req, res) => {
 
   // Responde à requisição original
   res.status(200).send({ message: 'Request logged successfully' })
+}
+
+// ----- Rota de coleta -----
+const collectPathRegex = /\/collect\/.+/;
+
+// Captura apenas GET requisições para /collect/*
+app.get(collectPathRegex, handleLogRequest);
+
+// Captura apenas POST requisições para /collect/*
+app.post(collectPathRegex, handleLogRequest);
+
+// Explicitly handle OPTIONS requests for the /collect/* path
+// This ensures OPTIONS requests are not logged and receive a standard response.
+// Nginx might handle CORS preflight, but this is a good fallback.
+app.options(collectPathRegex, (req, res) => {
+  res.sendStatus(204); // No Content
+});
+
+
+// ----- Rota para baixar o json do array loggedRequests -----
+app.get('/download', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+  res.setHeader('Content-Disposition', 'attachment; filename=logs.json')
+  res.send(JSON.stringify(loggedRequests, null, 2))
 })
 
 // ----- Inicialização do Servidor -----
