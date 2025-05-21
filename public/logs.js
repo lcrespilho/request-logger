@@ -67,7 +67,6 @@ function formatLogEntry(log) {
     <div class="log-entry">
       <div class="log-entry-header">
         <span class="method-badge ${methodClass}">${log.method}</span>
-        <span><strong>${log.path}</strong></span>
         <span><strong>Timestamp:</strong> ${timestamp}</span>
       </div>
       <p><strong>Path:</strong> ${log.path}</p>
