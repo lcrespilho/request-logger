@@ -67,11 +67,10 @@ function formatLogEntry(log) {
     <div class="log-entry">
       <div class="log-entry-header">
         <span class="method-badge ${methodClass}">${log.method}</span>
+        <span><strong>${log.path}</strong></span>
         <span><strong>Timestamp:</strong> ${timestamp}</span>
       </div>
-      <p><strong>IP:</strong> ${log.ip}</p>
       <p><strong>Path:</strong> ${log.path}</p>
-      <p><strong>URL:</strong> ${log.originalUrl}</p>
       
       <div class="pre-header">
         <span>Headers</span>
@@ -129,7 +128,7 @@ function connectSSE() {
   }
 
   eventSource.onmessage = event => {
-    console.log('SSE Data Received:', event.data)
+    // console.log('SSE Data Received:', event.data)
     try {
       const messageData = JSON.parse(event.data)
 
@@ -137,7 +136,7 @@ function connectSSE() {
         // Recebeu a carga inicial de logs
         clientLogs = messageData.logs
         logStatus.textContent = `Conectado. Exibindo ${clientLogs.length} logs.`
-        console.log(`Received initial ${clientLogs.length} logs.`)
+        // console.log(`Received initial ${clientLogs.length} logs.`)
       } else if (messageData.type === 'new_log' && messageData.log) {
         // Recebeu um novo log individual
         const newLog = messageData.log
@@ -147,7 +146,7 @@ function connectSSE() {
           clientLogs.pop()
         }
         logStatus.textContent = `Conectado. Última atualização: ${new Date().toLocaleTimeString('pt-BR')}`
-        console.log('Received new log entry.')
+        // console.log('Received new log entry.')
       } else {
         console.warn('Received unknown SSE message format:', messageData)
       }
