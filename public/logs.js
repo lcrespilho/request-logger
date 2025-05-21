@@ -105,7 +105,7 @@ function copyToClipboard(elementId) {
 // Add download functionality
 const downloadButton = document.getElementById('downloadButton')
 downloadButton.addEventListener('click', function () {
-  window.location.href = '/download'
+  window.location.href = 'download'
 })
 
 function renderLogs() {
