@@ -2,43 +2,126 @@ body {
   font-family: sans-serif;
   line-height: 1.5;
   margin: 20px;
-  background-color: #f9f9f9;
+  background-color: #f0f0f0;
+  color: #333;
 }
 
 h1 {
   text-align: center;
-  color: #333;
+  color: #2c3e50;
+  margin-bottom: 20px;
 }
 
 #logContainer {
   background-color: #fff;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 8px;
   padding: 15px;
   max-height: 80vh;
   overflow-y: auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .log-entry {
-  border-bottom: 1px dashed #eee;
-  padding: 15px 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: #fafafa;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: relative;
 }
 
-.log-entry:last-child {
-  border-bottom: none;
+.log-entry:nth-child(odd) {
+  background-color: #f5f9ff;
+}
+
+.log-entry:nth-child(even) {
+  background-color: #fff;
+}
+
+.log-entry p {
+  margin: 8px 0;
+}
+
+.log-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 10px;
+}
+
+.method-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  font-size: 0.8em;
+}
+
+.method-GET {
+  background-color: #28a745;
+}
+
+.method-POST {
+  background-color: #007bff;
+}
+
+.method-PUT {
+  background-color: #fd7e14;
+}
+
+.method-DELETE {
+  background-color: #dc3545;
+}
+
+.method-PATCH {
+  background-color: #6f42c1;
 }
 
 pre {
-  background-color: #eee;
-  padding: 10px;
+  background-color: #282c34;
+  color: #abb2bf;
+  padding: 12px;
   border-radius: 4px;
   white-space: pre-wrap;
   word-wrap: break-word;
   font-size: 0.9em;
+  position: relative;
+  margin: 10px 0;
+}
+
+.pre-header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #21252b;
+  padding: 5px 10px;
+  border-radius: 4px 4px 0 0;
+  margin-top: 10px;
+  color: #abb2bf;
+  font-size: 0.9em;
+}
+
+.copy-btn {
+  background-color: #4a5568;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 2px 8px;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.copy-btn:hover {
+  background-color: #2d3748;
 }
 
 strong {
-  color: #555;
+  color: #3182ce;
 }
 
 .status {
@@ -46,13 +129,17 @@ strong {
   padding: 10px;
   font-style: italic;
   color: #777;
+  margin-bottom: 15px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 #infoButton {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #007bff;
+  background-color: #3182ce;
   color: white;
   border-radius: 50%;
   width: 50px;
@@ -61,6 +148,25 @@ strong {
   line-height: 50px;
   font-size: 24px;
   cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+#downloadButton {
+  position: fixed;
+  bottom: 20px;
+  right: 80px;
+  background-color: #38a169;
+  color: white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 100;
 }
 
 #infoText {
@@ -72,6 +178,7 @@ strong {
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 15px;
-  width: 800px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  width: 500px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 101;
 }

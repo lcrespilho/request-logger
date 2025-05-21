@@ -10,35 +10,103 @@ let clientLogs = [] // Armazena os logs no lado do cliente
 const MAX_CLIENT_LOGS = 100 // Mantém o mesmo limite do servidor visualmente
 
 function formatLogEntry(log) {
-  // Trata o body: se for objeto, stringify; senão, mostra como está (ou vazio)
+  // Get method class for styling
+  const methodClass = `method-${log.method}`
+
+  // Format timestamp
+  const timestamp = new Date(log.timestamp).toLocaleString('pt-BR')
+
+  // Headers with copy button
+  const headersJson = JSON.stringify(log.headers, null, 2)
+  const headersId = `headers-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`
+
+  // Body content with copy button if it exists
   let bodyContent = ''
+  let bodyJson = ''
+
   if (log.body) {
+    const bodyId = `body-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`
+
     if (typeof log.body === 'object' && Object.keys(log.body).length > 0) {
       try {
-        bodyContent = `<p><strong>Body (JSON):</strong></p><pre>${JSON.stringify(log.body, null, 2)}</pre>`
+        bodyJson = JSON.stringify(log.body, null, 2)
+        bodyContent = `
+          <div class="pre-header">
+            <span>Body (JSON)</span>
+            <button class="copy-btn" onclick="copyToClipboard('${bodyId}')">Copiar</button>
+          </div>
+          <pre id="${bodyId}">${bodyJson}</pre>
+        `
       } catch (e) {
-        bodyContent = `<p><strong>Body (Erro ao formatar JSON):</strong></p><pre>${log.body}</pre>`
+        bodyContent = `
+          <div class="pre-header">
+            <span>Body (Erro ao formatar JSON)</span>
+          </div>
+          <pre>${log.body}</pre>
+        `
       }
     } else if (typeof log.body === 'string' && log.body.length > 0) {
-      bodyContent = `<p><strong>Body (Texto):</strong></p><pre>${log.body}</pre>`
+      bodyContent = `
+        <div class="pre-header">
+          <span>Body (Texto)</span>
+          <button class="copy-btn" onclick="copyToClipboard('${bodyId}')">Copiar</button>
+        </div>
+        <pre id="${bodyId}">${log.body}</pre>
+      `
     } else if (typeof log.body !== 'undefined') {
-      bodyContent = `<p><strong>Body:</strong></p><pre>${String(log.body)}</pre>`
+      bodyContent = `
+        <div class="pre-header">
+          <span>Body</span>
+        </div>
+        <pre>${String(log.body)}</pre>
+      `
     }
   }
 
   return `
-        <div class="log-entry">
-            <p><strong>Timestamp:</strong> ${new Date(log.timestamp).toLocaleString('pt-BR')}</p>
-            <p><strong>IP:</strong> ${log.ip}</p>
-            <p><strong>Método:</strong> ${log.method}</p>
-            <p><strong>Path:</strong> ${log.path}</p>
-            <p><strong>originalUrl:</strong> ${log.originalUrl}</p>
-            <p><strong>Headers:</strong></p>
-            <pre>${JSON.stringify(log.headers, null, 2)}</pre>
-            ${bodyContent}
-        </div>
-    `
+    <div class="log-entry">
+      <div class="log-entry-header">
+        <span class="method-badge ${methodClass}">${log.method}</span>
+        <span><strong>Timestamp:</strong> ${timestamp}</span>
+      </div>
+      <p><strong>IP:</strong> ${log.ip}</p>
+      <p><strong>Path:</strong> ${log.path}</p>
+      <p><strong>URL:</strong> ${log.originalUrl}</p>
+      
+      <div class="pre-header">
+        <span>Headers</span>
+        <button class="copy-btn" onclick="copyToClipboard('${headersId}')">Copiar</button>
+      </div>
+      <pre id="${headersId}">${headersJson}</pre>
+      ${bodyContent}
+    </div>
+  `
 }
+
+// Add this function to handle copying to clipboard
+function copyToClipboard(elementId) {
+  const element = document.getElementById(elementId)
+  const textArea = document.createElement('textarea')
+  textArea.value = element.textContent
+  document.body.appendChild(textArea)
+  textArea.select()
+  document.execCommand('copy')
+  document.body.removeChild(textArea)
+
+  // Show feedback
+  const originalButton = event.target
+  const originalText = originalButton.textContent
+  originalButton.textContent = 'Copiado!'
+  setTimeout(() => {
+    originalButton.textContent = originalText
+  }, 500)
+}
+
+// Add download functionality
+const downloadButton = document.getElementById('downloadButton')
+downloadButton.addEventListener('click', function () {
+  window.location.href = '/download'
+})
 
 function renderLogs() {
   if (clientLogs.length === 0) {
