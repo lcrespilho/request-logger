@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Log de Requisições3</title>
+  <title>Log de Requisições</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -19,13 +19,13 @@
     <p>Envie requisições GET ou POST para https://louren.co.in/request-logger/collect/{some-path}[/?somequery]</p>
     <pre>// Exemplo 1: GET
 
-fetch('https://louren.co.in/request-logger/collect/myrequest', {
+fetch('https://louren.co.in/request-logger/collect/myrequest?a=aa&b=bb', {
   method: 'GET'
 })
     </pre>
     <pre>// Exemplo 2: POST
 
-fetch('https://louren.co.in/request-logger/collect/myrequest', {
+fetch('https://louren.co.in/request-logger/collect/myrequest?a=aa&b=bb', {
   mode: 'cors',
   method: 'POST',
   headers: { 'content-type': 'application/json' }, // obrigatório

@@ -70,7 +70,7 @@ function formatLogEntry(log) {
         <span class="method-badge ${methodClass}">${log.method}</span>
         <span><strong>Timestamp:</strong> ${timestamp}</span>
       </div>
-      <p><strong>Path:</strong> ${log.path}</p>
+      <p><strong>Url:</strong> ${log.originalUrl}</p>
       
       <div class="pre-header">
         <span>Headers</span>
@@ -128,7 +128,6 @@ function connectSSE() {
   }
 
   eventSource.onmessage = event => {
-    ENABLE_CLOG && console.log('SSE Data Received:', event.data)
     try {
       const messageData = JSON.parse(event.data)
 

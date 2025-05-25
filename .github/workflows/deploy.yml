@@ -24,3 +24,12 @@ jobs:
             npm install
             pm2 restart request-logger
           EOF
+      - name: Test Collector
+        run: |
+          curl 'https://louren.co.in/request-logger/collect/myrequest?a=aa&b=bb' \
+            -H 'Referer: https://example.com'
+          curl 'https://louren.co.in/request-logger/collect/myrequest?a=aa' \
+            -H 'Referer: https://example.com' \
+            -H 'content-type: application/json' \
+            --data-raw '{"a":"aa","b":"bb"}'
+      
