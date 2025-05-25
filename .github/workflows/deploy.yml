@@ -27,9 +27,9 @@ jobs:
       - name: Test Collector
         run: |
           sleep 5
-          curl 'https://louren.co.in/request-logger/collect/myrequest?a=aa&b=bb' \
+          curl 'https://louren.co.in/request-logger/collect/test-get?p1=v1&p2=v2' \
             -H 'Referer: https://example.com'
-          curl 'https://louren.co.in/request-logger/collect/myrequest?a=aa' \
+          curl 'https://louren.co.in/request-logger/collect/test-post?p1=v1&p2=v2' \
             -H 'Referer: https://example.com' \
             -H 'content-type: application/json' \
             --data-raw '{"a":"aa","b":"bb"}'

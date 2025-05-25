@@ -19,17 +19,17 @@
     <p>Envie requisições GET ou POST para https://louren.co.in/request-logger/collect/{some-path}[/?somequery]</p>
     <pre>// Exemplo 1: GET
 
-fetch('https://louren.co.in/request-logger/collect/myrequest?a=aa&b=bb', {
+fetch('https://louren.co.in/request-logger/collect/myrequest?p1=v1&p2=v2', {
   method: 'GET'
 })
     </pre>
     <pre>// Exemplo 2: POST
 
-fetch('https://louren.co.in/request-logger/collect/myrequest?a=aa&b=bb', {
+fetch('https://louren.co.in/request-logger/collect/myrequest?p1=v1&p2=v2', {
   mode: 'cors',
   method: 'POST',
   headers: { 'content-type': 'application/json' }, // obrigatório
-  body: JSON.stringify({ a: 'aa' }),
+  body: JSON.stringify({ a: 'aa', b: 'bb' }),
 })
     </pre>
   </div>
