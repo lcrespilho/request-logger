@@ -73,7 +73,6 @@ app.get('/sse', (req, res) => {
 function handleLogRequest(req, res) {
   const logEntry = {
     timestamp: new Date().toISOString(),
-    ip: req.ip || req.socket.remoteAddress, // IP do requisitante
     method: req.method,
     path: req.path,
     headers: req.headers,
@@ -89,7 +88,7 @@ function handleLogRequest(req, res) {
     loggedRequests.pop() // Remove o log mais antigo (do final do array)
   }
 
-  console.log(`Logged ${logEntry.method} request to ${logEntry.path} from ${logEntry.ip}`)
+  console.log(`Logged ${logEntry.method} request to ${logEntry.path}`)
 
   // Notifica os clientes do painel sobre o novo log via SSE
   sendUpdateToClients({ type: 'new_log', log: logEntry })

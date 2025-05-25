@@ -8,6 +8,7 @@ const logContainer = document.getElementById('logContainer')
 const logStatus = document.getElementById('logStatus')
 let clientLogs = [] // Armazena os logs no lado do cliente
 const MAX_CLIENT_LOGS = 100 // Mantém o mesmo limite do servidor visualmente
+const ENABLE_CLOG = true
 
 function formatLogEntry(log) {
   // Get method class for styling
@@ -127,7 +128,7 @@ function connectSSE() {
   }
 
   eventSource.onmessage = event => {
-    // console.log('SSE Data Received:', event.data)
+    ENABLE_CLOG && console.log('SSE Data Received:', event.data)
     try {
       const messageData = JSON.parse(event.data)
 
@@ -135,7 +136,7 @@ function connectSSE() {
         // Recebeu a carga inicial de logs
         clientLogs = messageData.logs
         logStatus.textContent = `Conectado. Exibindo ${clientLogs.length} logs.`
-        // console.log(`Received initial ${clientLogs.length} logs.`)
+        ENABLE_CLOG && console.log(`Received initial ${clientLogs.length} logs.`)
       } else if (messageData.type === 'new_log' && messageData.log) {
         // Recebeu um novo log individual
         const newLog = messageData.log
@@ -145,7 +146,7 @@ function connectSSE() {
           clientLogs.pop()
         }
         logStatus.textContent = `Conectado. Última atualização: ${new Date().toLocaleTimeString('pt-BR')}`
-        // console.log('Received new log entry.')
+        ENABLE_CLOG && console.log('Received new log entry:', newLog)
       } else {
         console.warn('Received unknown SSE message format:', messageData)
       }
