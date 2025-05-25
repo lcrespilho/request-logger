@@ -26,10 +26,10 @@ jobs:
           EOF
       - name: Test Collector
         run: |
+          sleep 5
           curl 'https://louren.co.in/request-logger/collect/myrequest?a=aa&b=bb' \
             -H 'Referer: https://example.com'
           curl 'https://louren.co.in/request-logger/collect/myrequest?a=aa' \
             -H 'Referer: https://example.com' \
             -H 'content-type: application/json' \
             --data-raw '{"a":"aa","b":"bb"}'
-      
