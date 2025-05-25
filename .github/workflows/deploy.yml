@@ -1,0 +1,26 @@
+name: Deploy on GCP VM lourenco
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H louren.co.in > ~/.ssh/known_hosts
+      - name: Deploy
+        run: |
+          ssh -T user@louren.co.in << EOF
+            export PATH=/home/user/.nvm/versions/node/v23.11.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/snap/bin
+            pm2 stop request-logger
+            cd ~/GitRepos/request-logger
+            git pull
+            npm install
+            pm2 restart request-logger
+          EOF
