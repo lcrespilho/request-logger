@@ -9,7 +9,7 @@ const clearLogsButton = document.getElementById('clearLogsButton')
 const logStatus = document.getElementById('logStatus')
 let clientLogs = [] // Armazena os logs no lado do cliente
 const MAX_CLIENT_LOGS = 100 // Mantém o mesmo limite do servidor visualmente
-const ENABLE_CLOG = true
+const ENABLE_CLOG = true // Enable/disable console logs in the frontend script
 
 function formatLogEntry(log) {
   // Get method class for styling
@@ -66,7 +66,7 @@ function formatLogEntry(log) {
   }
 
   return `
-    <div class="log-entry">
+    <div class="log-entry" data-log-id="${log.id}">
       <div class="log-entry-header">
         <span class="method-badge ${methodClass}">${log.method}</span>
         <span><strong>Timestamp:</strong> ${timestamp}</span>
@@ -79,6 +79,7 @@ function formatLogEntry(log) {
       </div>
       <pre id="${headersId}">${headersJson}</pre>
       ${bodyContent}
+      <button class="delete-log-button" title="Delete">🗑️</button>
     </div>
   `
 }
@@ -115,6 +116,33 @@ clearLogsButton.addEventListener('click', async () => {
   } catch (error) {
     console.error('Error sending clear logs request:', error)
     alert('Error sending clear logs request. Check the console for details.')
+  }
+})
+
+// --- Delete Individual Log Functionality ---
+logContainer.addEventListener('click', async event => {
+  // Check if the clicked element or its parent is the delete button
+  const deleteButton = event.target.closest('.delete-log-button')
+  if (deleteButton) {
+    const logEntryElement = deleteButton.closest('.log-entry')
+    if (!logEntryElement) return // Should not happen if button is inside .log-entry
+
+    const logId = logEntryElement.dataset.logId
+    if (!logId) {
+      ENABLE_CLOG && console.error('Log ID not found for this entry.')
+      alert('Erro: Não foi possível identificar o log para excluir.')
+      return
+    }
+
+    try {
+      // Send DELETE request to the backend endpoint
+      const response = await fetch(`${logId}`, { method: 'DELETE' })
+      if (!response.ok) alert('Failed to clear logs. Server responded with: ' + response.status)
+      // UI update will be handled by the SSE 'log_deleted' event
+    } catch (error) {
+      console.error('Error sending delete log request:', error)
+      alert('Error sending clear log request. Check the console for details.')
+    }
   }
 })
 
@@ -164,9 +192,16 @@ function connectSSE() {
         logStatus.textContent = `Conectado. Última atualização: ${new Date().toLocaleTimeString('pt-BR')}`
         ENABLE_CLOG && console.log('Received new log entry:', newLog)
       } else if (messageData.type === 'clear_logs') {
+        // Recebeu pedido para deletar todos os logs
         ENABLE_CLOG && console.log('Received clear_logs event from server. Clearing UI.')
         clientLogs = [] // Clear the client-side array
         logStatus.textContent = 'Logs limpos pelo servidor.'
+      } else if (messageData.type === 'log_deleted' && messageData.logId) {
+        // Recebeu pedido para deletar um log individual
+        const deletedLogId = messageData.logId
+        ENABLE_CLOG && console.log(`Received log_deleted event for log ID ${deletedLogId}`)
+        // Remove the log from the client-side array
+        clientLogs = clientLogs.filter(log => log.id !== deletedLogId)
       } else {
         console.warn('Received unknown SSE message format:', messageData)
       }

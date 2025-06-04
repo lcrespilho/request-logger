@@ -1,7 +1,7 @@
 const express = require('express')
 const http = require('http') // Necessário para SSE
 const path = require('path')
-
+const { v4: uuidv4 } = require('uuid')
 const app = express()
 const server = http.createServer(app) // Usaremos este server para SSE
 const PORT = process.env.PORT || 1029 // Use a porta do ambiente ou 3000
@@ -72,6 +72,7 @@ app.get('/sse', (req, res) => {
 // ----- Helper function for logging requests -----
 function handleLogRequest(req, res) {
   const logEntry = {
+    id: uuidv4(), // Add a unique ID to the log entry
     timestamp: new Date().toISOString(),
     method: req.method,
     path: req.path,
@@ -83,7 +84,7 @@ function handleLogRequest(req, res) {
   // Adiciona o novo log no início do array
   loggedRequests.unshift(logEntry)
 
-  // Mantém o array com no máximo MAX_LOGS entradas
+  // Mantém o array com no máximo MAX_LOGS entradas (remove a mais antiga)
   if (loggedRequests.length > MAX_LOGS) {
     loggedRequests.pop() // Remove o log mais antigo (do final do array)
   }
@@ -98,21 +99,20 @@ function handleLogRequest(req, res) {
 }
 
 // ----- Rota de coleta -----
-const collectPathRegex = /\/collect\/.+/;
+const collectPathRegex = /\/collect\/.+/
 
 // Captura apenas GET requisições para /collect/*
-app.get(collectPathRegex, handleLogRequest);
+app.get(collectPathRegex, handleLogRequest)
 
 // Captura apenas POST requisições para /collect/*
-app.post(collectPathRegex, handleLogRequest);
+app.post(collectPathRegex, handleLogRequest)
 
 // Explicitly handle OPTIONS requests for the /collect/* path
 // This ensures OPTIONS requests are not logged and receive a standard response.
 // Nginx might handle CORS preflight, but this is a good fallback.
 app.options(collectPathRegex, (req, res) => {
-  res.sendStatus(204); // No Content
-});
-
+  res.sendStatus(204) // No Content
+})
 
 // ----- Rota para baixar o json do array loggedRequests -----
 app.get('/download', (req, res) => {
@@ -123,14 +123,28 @@ app.get('/download', (req, res) => {
 
 // ----- Rota para limpar os logs -----
 app.post('/clear-logs', (req, res) => {
-  console.log('Clearing logs...');
-  loggedRequests = []; // Clear the array
-
+  console.log('Clearing logs...')
+  loggedRequests = [] // Clear the array
   // Notify SSE clients that logs have been cleared
-  sendUpdateToClients({ type: 'clear_logs' });
+  sendUpdateToClients({ type: 'clear_logs' })
+  res.status(200).send({ message: 'Logs cleared successfully' })
+})
 
-  res.status(200).send({ message: 'Logs cleared successfully' });
-});
+// ----- Rota para deletar um log individual -----
+app.delete('/:logId', (req, res) => {
+  const { logId } = req.params
+  if (!logId) return res.status(400).send({ message: 'Log ID is required' })
+  const logIndex = loggedRequests.findIndex(log => log.id === logId)
+  if (logIndex === -1) {
+    console.log(`Log with ID ${logId} not found for deletion.`)
+    return res.status(404).send({ message: 'Log not found' })
+  }
+  loggedRequests.splice(logIndex, 1)
+  console.log(`Log with ID ${logId} deleted successfully.`)
+  // Notify SSE clients that a log was deleted
+  sendUpdateToClients({ type: 'log_deleted', logId })
+  return res.status(204).send()
+})
 
 // ----- Inicialização do Servidor -----
 server.listen(PORT, () => {
@@ -139,5 +153,8 @@ server.listen(PORT, () => {
   console.log(`Painel de logs: http://localhost:${PORT}/logs, https://louren.co.in/request-logger/logs`)
   console.log(`SSE Endpoint: http://localhost:${PORT}/sse, https://louren.co.in/request-logger/sse`)
   console.log(`Download Logs Endpoint: http://localhost:${PORT}/download, https://louren.co.in/request-logger/download`)
-  console.log(`Clear Logs Endpoint: http://localhost:${PORT}/clear-logs, https://louren.co.in/request-logger/clear-logs`)
+  console.log(
+    `Clear Logs Endpoint: http://localhost:${PORT}/clear-logs, https://louren.co.in/request-logger/clear-logs`
+  )
+  console.log(`Delete Log Endpoint: http://localhost:${PORT}/:logId, https://louren.co.in/request-logger/:logId`)
 })

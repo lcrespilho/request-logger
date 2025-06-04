@@ -22,7 +22,7 @@ jobs:
             cd ~/GitRepos/request-logger
             git pull
             npm install
-            pm2 restart request-logger
+            pm2 start request-logger
           EOF
       - name: Test Collector
         run: |
