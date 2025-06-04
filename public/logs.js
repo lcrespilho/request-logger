@@ -5,6 +5,7 @@ infoButton.addEventListener('click', () => {
 })
 
 const logContainer = document.getElementById('logContainer')
+const clearLogsButton = document.getElementById('clearLogsButton')
 const logStatus = document.getElementById('logStatus')
 let clientLogs = [] // Armazena os logs no lado do cliente
 const MAX_CLIENT_LOGS = 100 // Mantém o mesmo limite do servidor visualmente
@@ -101,6 +102,22 @@ function copyToClipboard(elementId) {
   }, 500)
 }
 
+// --- Clear Logs Button Functionality ---
+clearLogsButton.addEventListener('click', async () => {
+  try {
+    const response = await fetch('clear-logs', { method: 'POST' })
+    if (response.ok) {
+      ENABLE_CLOG && console.log('Clear logs request successful. UI will update via SSE.')
+      // The SSE event 'clear_logs' will handle clearing the UI
+    } else {
+      alert('Failed to clear logs. Server responded with: ' + response.status)
+    }
+  } catch (error) {
+    console.error('Error sending clear logs request:', error)
+    alert('Error sending clear logs request. Check the console for details.')
+  }
+})
+
 // Add download functionality
 const downloadButton = document.getElementById('downloadButton')
 downloadButton.addEventListener('click', function () {
@@ -146,6 +163,10 @@ function connectSSE() {
         }
         logStatus.textContent = `Conectado. Última atualização: ${new Date().toLocaleTimeString('pt-BR')}`
         ENABLE_CLOG && console.log('Received new log entry:', newLog)
+      } else if (messageData.type === 'clear_logs') {
+        ENABLE_CLOG && console.log('Received clear_logs event from server. Clearing UI.')
+        clientLogs = [] // Clear the client-side array
+        logStatus.textContent = 'Logs limpos pelo servidor.'
       } else {
         console.warn('Received unknown SSE message format:', messageData)
       }
@@ -163,8 +184,8 @@ function connectSSE() {
     // O EventSource tenta reconectar automaticamente por padrão.
     // Poderia fechar aqui se não quisesse reconexão: eventSource.close();
     // Limpa os logs para indicar o problema
-    clientLogs = []
-    renderLogs()
+    clientLogs = [] // Clear client-side logs on error too
+    renderLogs() // Render the now empty list
     // Tenta reconectar manualmente após um tempo se necessário (opcional)
     // setTimeout(connectSSE, 5000); // Exemplo: Tenta novamente em 5 segundos
   }

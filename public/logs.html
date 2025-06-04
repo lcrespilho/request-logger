@@ -9,10 +9,15 @@
 </head>
 
 <body>
-  <h1>Painel de Log de Requisições HTTP</h1>
+  <h1>Painel de Log de Requisições</h1>
   <div id="logStatus" class="status">Conectando ao servidor...</div>
-  <div id="logContainer"></div>
 
+  <div id="controls" style="margin-bottom: 20px;">
+    <button id="clearLogsButton">Clear All Logs</button>
+    <div id="downloadButton" title="Download Logs">⏬</div>
+  </div>
+
+  <div id="logContainer"></div>
   <div id="infoButton">?</div>
   <div id="infoText" style="display: none">
     <p>Este painel exibe logs de requisições HTTP em tempo real.</p>
@@ -34,7 +39,6 @@ fetch('https://louren.co.in/request-logger/collect/myrequest?p1=v1&p2=v2', {
     </pre>
   </div>
 
-  <div id="downloadButton" title="Download Logs">⏬</div>
   <script src="logs.js"></script>
 </body>
 

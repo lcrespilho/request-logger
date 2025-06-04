@@ -121,10 +121,23 @@ app.get('/download', (req, res) => {
   res.send(JSON.stringify(loggedRequests, null, 2))
 })
 
+// ----- Rota para limpar os logs -----
+app.post('/clear-logs', (req, res) => {
+  console.log('Clearing logs...');
+  loggedRequests = []; // Clear the array
+
+  // Notify SSE clients that logs have been cleared
+  sendUpdateToClients({ type: 'clear_logs' });
+
+  res.status(200).send({ message: 'Logs cleared successfully' });
+});
+
 // ----- Inicialização do Servidor -----
 server.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`)
   console.log(`Endpoint de Logging: http://localhost:${PORT}/collect/*, https://louren.co.in/request-logger/collect/*`)
   console.log(`Painel de logs: http://localhost:${PORT}/logs, https://louren.co.in/request-logger/logs`)
   console.log(`SSE Endpoint: http://localhost:${PORT}/sse, https://louren.co.in/request-logger/sse`)
+  console.log(`Download Logs Endpoint: http://localhost:${PORT}/download, https://louren.co.in/request-logger/download`)
+  console.log(`Clear Logs Endpoint: http://localhost:${PORT}/clear-logs, https://louren.co.in/request-logger/clear-logs`)
 })
