@@ -25,7 +25,8 @@
     <pre>// Exemplo 1: GET
 
 fetch('https://louren.co.in/request-logger/collect/myrequest?p1=v1&p2=v2', {
-  method: 'GET'
+  method: 'GET',
+  keepalive: true
 })
     </pre>
     <pre>// Exemplo 2: POST
@@ -35,6 +36,7 @@ fetch('https://louren.co.in/request-logger/collect/myrequest?p1=v1&p2=v2', {
   method: 'POST',
   headers: { 'content-type': 'application/json' }, // obrigatório
   body: JSON.stringify({ a: 'aa', b: 'bb' }),
+  keepalive: true
 })
     </pre>
   </div>
