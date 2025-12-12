@@ -11,6 +11,15 @@ let clientLogs = [] // Armazena os logs no lado do cliente
 const MAX_CLIENT_LOGS = 100 // Mantém o mesmo limite do servidor visualmente
 const ENABLE_CLOG = true // Enable/disable console logs in the frontend script
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 function formatLogEntry(log) {
   // Get method class for styling
   const methodClass = `method-${log.method}`
@@ -71,7 +80,7 @@ function formatLogEntry(log) {
         <span class="method-badge ${methodClass}">${log.method}</span>
         <span><strong>Timestamp:</strong> ${timestamp}</span>
       </div>
-      <p><strong>Url:</strong> ${log.originalUrl}</p>
+      <p><strong>Url:</strong> ${escapeHtml(log.originalUrl)}</p>
       
       <div class="pre-header">
         <span>Headers</span>
