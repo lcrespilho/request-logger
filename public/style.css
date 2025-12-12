@@ -42,6 +42,9 @@ h1 {
 
 .log-entry p {
   margin: 8px 0;
+  word-break: break-all;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .log-entry-header {
